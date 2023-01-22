@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../widgets/task_list.dart';
 
 class TasksScreen extends StatelessWidget {
   const TasksScreen({Key? key}) : super(key: key);
@@ -62,37 +63,10 @@ class TasksScreen extends StatelessWidget {
                 ),
               ),
               height: 500.0,
-              child: ListView(
-                children: [
-                  TaskTile('This is a task'),
-                  TaskTile('This is a task'),
-                  TaskTile('This is a task'),
-                ],
-              ),
+              child: TaskList(),
             ),
           ],
         ),
-      ),
-    );
-  }
-}
-
-//class to store tasks
-class TaskTile extends StatelessWidget {
-  TaskTile(this.taskTitle);
-
-  final String taskTitle;
-  bool isChecked = false;
-
-  @override
-  Widget build(BuildContext context) {
-    return ListTile(
-      title: Text('$taskTitle'),
-      trailing: Checkbox(
-        value: isChecked,
-        onChanged: (value) {
-          isChecked = value!;
-        },
       ),
     );
   }
