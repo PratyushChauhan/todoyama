@@ -33,6 +33,7 @@ class _TaskTileState extends State<TaskTile> {
           setState(() {
             ischecked = value!;
           });
+          widget.checkboxCallback(value);
         },
       ),
     );

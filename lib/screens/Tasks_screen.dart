@@ -1,23 +1,17 @@
 import 'package:flutter/material.dart';
 import '../widgets/task_list.dart';
 import 'add_task_screen.dart';
-import '../models/task.dart';
+import 'package:todoyama/models/task_data.dart';
+import 'package:provider/provider.dart';
 
-class TasksScreen extends StatefulWidget {
+class TasksScreen extends StatelessWidget {
   TasksScreen({Key? key}) : super(key: key);
-
-  @override
-  State<TasksScreen> createState() => _TasksScreenState();
-}
-
-class _TasksScreenState extends State<TasksScreen> {
-  List<Task> tasks = [];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.lightBlueAccent,
+        backgroundColor: Theme.of(context).primaryColor,
         child: const Icon(Icons.add),
         onPressed: () {
           //add new task
@@ -25,15 +19,13 @@ class _TasksScreenState extends State<TasksScreen> {
             context: context,
             builder: (context) => AddTaskScreen(
               addTaskCallback: (newTask) {
-                setState(() {
-                  tasks.add(Task(name: newTask));
-                });
+                 Provider.of<TaskData>(context, listen: false).addTask(newTask);
               },
             ),
           );
         },
       ),
-      backgroundColor: Colors.lightBlueAccent,
+      backgroundColor: Theme.of(context).primaryColor,
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -49,13 +41,13 @@ class _TasksScreenState extends State<TasksScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  CircleAvatar(
+                   CircleAvatar(
                     backgroundColor: Colors.white,
                     radius: 30.0,
                     child: Icon(
                       Icons.list,
                       size: 30.0,
-                      color: Colors.lightBlueAccent,
+                      color: Theme.of(context).primaryColor,
                     ),
                   ),
                   const SizedBox(
@@ -70,7 +62,7 @@ class _TasksScreenState extends State<TasksScreen> {
                     ),
                   ),
                   Text(
-                    '${tasks.length} Tasks',
+                    '${Provider.of<TaskData>(context).taskCount} Tasks',
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: 18.0,
@@ -89,9 +81,7 @@ class _TasksScreenState extends State<TasksScreen> {
                 ),
               ),
               height: 500.0,
-              child: TaskList(
-                tasks: tasks,
-              ),
+              child: TaskList(),
             ),
           ],
         ),

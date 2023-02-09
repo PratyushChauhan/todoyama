@@ -1,46 +1,69 @@
 import 'package:flutter/material.dart';
+import 'package:todoyama/models/task_data.dart';
+import '../screens/add_task_screen.dart';
 import 'task_tile.dart';
-import 'package:todoyama/models/task.dart';
+import 'package:provider/provider.dart';
 
-class TaskList extends StatefulWidget {
-  TaskList({required this.tasks});
-  List<Task> tasks;
-
-  @override
-  State<TaskList> createState() => _TaskListState();
-}
-
-class _TaskListState extends State<TaskList> {
+class TaskList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final List<Task> tasks = widget.tasks;
-
-    return tasks.length == 0
+    return Provider.of<TaskData>(context).taskCount == 0
         ? Container(
-            padding: const EdgeInsets.all(20.0),
+            padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 220.0) ,
             width: double.infinity,
-            child: const Text(
-              "Add a task.",
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 20.0,
+            child: Material(
+              elevation: 5.0,
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(
+                  Radius.circular(20.0),
+                ),
+              ),
+              child: TextButton(
+                style: TextButton.styleFrom(
+                  backgroundColor: Theme.of(context).primaryColor,
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(20.0),
+                    ),
+                  ),
+                ),
+                onPressed: () {
+                  //add new task
+                  showModalBottomSheet(
+                    context: context,
+                    builder: (context) => AddTaskScreen(
+                      addTaskCallback: (newTask) {
+                        Provider.of<TaskData>(context, listen: false).addTask(newTask);
+                      },
+                    ),
+                  );
+                },
+                child: const Text(
+                  "Add a task.",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20.0,
+                  ),
+                ),
               ),
             ),
           )
-        : ListView.builder(
-            itemCount: tasks.length,
+        : Consumer(
+          builder: (context, TaskData taskData, child) {
+            return ListView.builder(
+            itemCount: Provider.of<TaskData>(context).taskCount,
             itemBuilder: (context, index) {
               return TaskTile(
-                taskTitle: tasks[index].name,
-                isChecked: tasks[index].isDone,
+                taskTitle: Provider.of<TaskData>(context).getTaskName(index),
+                isChecked:  Provider.of<TaskData>(context).isTaskDone(index),
                 checkboxCallback: (checkboxState) {
-                  setState(() {
-                    tasks[index].toggleDone();
-                  });
+                  Provider.of<TaskData>(context, listen: false).toggleTaskDone(index);
                 },
               );
             },
           );
+          },
+        );
   }
 }

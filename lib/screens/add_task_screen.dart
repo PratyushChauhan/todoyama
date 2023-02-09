@@ -27,16 +27,25 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const Text(
+            Text(
               'Add Task',
               textAlign: TextAlign.center,
               style: TextStyle(
-                color: Colors.lightBlueAccent,
+                color: Theme.of(context).primaryColor,
                 fontSize: 30.0,
               ),
             ),
             TextField(
               autofocus: true,
+              cursorColor: Theme.of(context).primaryColor,
+              decoration:  InputDecoration(
+                focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(
+                    color: Theme.of(context).primaryColor,
+                    width: 2.0,
+                  ),
+                ),
+              ),
               textAlign: TextAlign.center,
               onChanged: (value) {
                 setState(() {
@@ -49,7 +58,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
             ),
             TextButton(
               style: TextButton.styleFrom(
-                backgroundColor: Colors.lightBlueAccent,
+                backgroundColor: Theme.of(context).primaryColor,
               ),
               onPressed: () {
                 //add task to list
