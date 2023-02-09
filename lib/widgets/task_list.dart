@@ -52,13 +52,40 @@ class TaskList extends StatelessWidget {
         : Consumer(
           builder: (context, TaskData taskData, child) {
             return ListView.builder(
-            itemCount: Provider.of<TaskData>(context).taskCount,
+            itemCount: taskData.taskCount,
             itemBuilder: (context, index) {
               return TaskTile(
-                taskTitle: Provider.of<TaskData>(context).getTaskName(index),
-                isChecked:  Provider.of<TaskData>(context).isTaskDone(index),
+                onLongPress: () {
+                  //show popup to confirm delete
+                  showDialog(context: context, builder: (context) => AlertDialog(
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(20.0),
+                      ),
+                    ),
+                    title:  Text("Delete Task",style: TextStyle(color: Theme.of(context).primaryColor),),
+                    content: const Text("Are you sure you want to delete this task?"),
+                    actions: [
+                      TextButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child:  Text("Cancel",style: TextStyle(color: Theme.of(context).primaryColor),),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          taskData.deleteTask(index);
+                          Navigator.pop(context);
+                        },
+                        child: const Text("Delete",style: TextStyle(color: Colors.deepOrangeAccent)),
+                      ),
+                    ],
+                  ));
+                },
+                taskTitle: taskData.getTaskName(index),
+                isChecked:  taskData.isTaskDone(index),
                 checkboxCallback: (checkboxState) {
-                  Provider.of<TaskData>(context, listen: false).toggleTaskDone(index);
+                  taskData.updateTask(index);
                 },
               );
             },
